@@ -4,8 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aberdeen Tunnel BBI PIDS Simulator</title>
-  <!-- 引入 Roboto 字體 -->
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
+  
+  <!-- 強化版 Roboto 字體載入設定 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  
   <style>
     :root {
       --ctb-blue-bg: #0033cc;
@@ -35,7 +39,7 @@
       justify-content: center;
       align-items: center;
       overflow: hidden;
-      font-family: "Arial", "PingFang HK", "Microsoft JhengHei", "Heiti TC", sans-serif;
+      font-family: "Roboto", "Arial", "PingFang HK", "Microsoft JhengHei", "Heiti TC", sans-serif;
     }
 
     #app-wrapper {
@@ -205,7 +209,7 @@
     .route-box {
       background: var(--route-bg);
       color: white;
-      font-family: 'Roboto', sans-serif;
+      font-family: 'Roboto', 'Arial', sans-serif;
       font-size: 5cqw;
       font-weight: bold;
       padding: 0.5cqw 2cqw;
@@ -234,7 +238,7 @@
       flex: 1;
     }
 
-    /* 修正為 -45 度，向左上方發射 */
+    /* -45 度，向左上方發射 */
     .gps-icon {
       width: 1.6cqw;
       height: 1.6cqw;
@@ -248,7 +252,7 @@
     .gps-icon.active { opacity: 1; }
 
     .eta-number {
-      font-family: 'Roboto', sans-serif;
+      font-family: 'Roboto', 'Arial', sans-serif;
       font-size: 6.5cqw;
       font-weight: bold;
       color: var(--text-blue);
@@ -399,7 +403,7 @@
     const API_BASE = "https://rt.data.gov.hk/v1/transport/citybus-nwfb";
     const ITEMS_PER_PAGE = 8;
     
-    // GPS SVG 圖示 (預設向上)
+    // GPS SVG 圖示
     const GPS_SVG = `<svg class="gps-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14h2v2h-2v-2zm1-12C9.24 4 7 6.24 7 9h2c0-1.66 1.34-3 3-3s3 1.34 3 3c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.76-2.24-5-5-5z" opacity="0"/><path d="M4.01 10.32C5.55 7.15 8.5 5 12 5c3.5 0 6.45 2.15 8.01 5.32l1.79-1C19.83 5.4 16.21 3 12 3 7.79 3 4.17 5.4 2.22 9.32l1.79 1z"/><path d="M8.2 13.06C9.1 11.23 10.45 10 12 10c1.55 0 2.9.89 3.8 2.06l1.6-1.2C16.14 9.24 14.19 8 12 8c-2.19 0-4.14 1.24-5.4 2.86l1.6 1.2z"/></svg>`;
 
     const PLATFORM_ROUTES = {
@@ -619,61 +623,65 @@
 
       container.querySelectorAll('.grid-item').forEach(e => e.remove());
 
+      let currentItems = [];
       if (activeDepartures.length === 0) {
         noDepMsg.style.display = "block";
         noDepMsg.innerHTML = "現時段暫無班次<br>No Departures";
-        return;
+      } else {
+        noDepMsg.style.display = "none";
+        const totalPages = Math.ceil(activeDepartures.length / ITEMS_PER_PAGE);
+        if (currentPage >= totalPages) currentPage = 0;
+        const startIndex = currentPage * ITEMS_PER_PAGE;
+        currentItems = activeDepartures.slice(startIndex, startIndex + ITEMS_PER_PAGE);
       }
-      
-      noDepMsg.style.display = "none";
-      
-      const totalPages = Math.ceil(activeDepartures.length / ITEMS_PER_PAGE);
-      if (currentPage >= totalPages) currentPage = 0;
-      
-      const startIndex = currentPage * ITEMS_PER_PAGE;
-      const currentItems = activeDepartures.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
-      currentItems.forEach(item => {
+      for (let i = 0; i < ITEMS_PER_PAGE; i++) {
         const cell = document.createElement("div");
         cell.className = "grid-item";
 
-        // 動態判斷配色類別
-        let routeClass = "route-box";
-        if (XHT_ROUTES.includes(item.route)) {
-          routeClass += " xht";
-        } else if (item.route.startsWith("N")) {
-          routeClass += " night";
-        }
+        if (i < currentItems.length) {
+          const item = currentItems[i];
+          
+          let routeClass = "route-box";
+          if (XHT_ROUTES.includes(item.route)) {
+            routeClass += " xht";
+          } else if (item.route.startsWith("N")) {
+            routeClass += " night";
+          }
 
-        let etaDisplay = '';
-        if (item.mins <= 1) {
-          etaDisplay = `
-            <div class="arriving-text">
-              <span>即將抵達</span>
-              <span style="font-size: 1.2cqw;">Arriving</span>
+          let etaDisplay = '';
+          if (item.mins <= 1) {
+            etaDisplay = `
+              <div class="arriving-text">
+                <span>即將抵達</span>
+                <span style="font-size: 1.2cqw;">Arriving</span>
+              </div>
+            `;
+          } else {
+            etaDisplay = `
+              <span class="eta-number">${item.mins}</span>
+              <div class="eta-text">
+                <span>分鐘</span>
+                <span>Mins</span>
+              </div>
+            `;
+          }
+
+          let gpsSvgCode = GPS_SVG.replace('class="gps-icon"', `class="gps-icon ${item.hasGpsIcon ? 'active' : ''}"`);
+
+          cell.innerHTML = `
+            <div class="${routeClass}">${item.route}</div>
+            <div class="eta-section">
+              ${gpsSvgCode}
+              ${etaDisplay}
             </div>
           `;
         } else {
-          etaDisplay = `
-            <span class="eta-number">${item.mins}</span>
-            <div class="eta-text">
-              <span>分鐘</span>
-              <span>Mins</span>
-            </div>
-          `;
+          cell.innerHTML = '';
         }
-
-        let gpsSvgCode = GPS_SVG.replace('class="gps-icon"', `class="gps-icon ${item.hasGpsIcon ? 'active' : ''}"`);
-
-        cell.innerHTML = `
-          <div class="${routeClass}">${item.route}</div>
-          <div class="eta-section">
-            ${gpsSvgCode}
-            ${etaDisplay}
-          </div>
-        `;
+        
         container.appendChild(cell);
-      });
+      }
     }
 
     function toggleFullScreen() {
