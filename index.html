@@ -14,6 +14,10 @@
       --bg-gradient-bottom: #f2f7ff;
       --text-blue: #003399;
       --gps-orange: #f27224;
+      /* 新增：過海線與通宵線的專屬配色 */
+      --xht-red: #d31820;
+      --night-black: #000000;
+      --night-yellow: #ffcc00;
     }
 
     * {
@@ -212,6 +216,17 @@
       letter-spacing: -0.1cqw;
     }
 
+    /* 過海路線專屬樣式 (紅底白字) */
+    .route-box.xht {
+      background: var(--xht-red);
+    }
+
+    /* 通宵路線專屬樣式 (黑底黃字) */
+    .route-box.night {
+      background: var(--night-black);
+      color: var(--night-yellow);
+    }
+
     .eta-section {
       display: flex;
       align-items: center;
@@ -219,7 +234,6 @@
       flex: 1;
     }
 
-    /* 還原為預設方向，並套用 fill 填色 */
     .gps-icon {
       width: 1.6cqw;
       height: 1.6cqw;
@@ -228,6 +242,7 @@
       margin-bottom: 3.5cqw; 
       fill: var(--gps-orange);
       opacity: 0;
+      transform: rotate(-90deg);
     }
     .gps-icon.active { opacity: 1; }
 
@@ -347,7 +362,6 @@
             <button class="btn-platform" onclick="startSystem('S', 'C')">月台 C (37B, 38, 42, 70, 72, 107 等)</button>
           </div>
         </div>
-        <div style="font-size: 1.1cqw; color: #666; margin-top: 1cqw;">* 雙擊 PIDS 頂部藍色標題列可返回此選單</div>
         
         <!-- 迷你獨立清除快取按鈕 -->
         <button class="btn-clear-cache" onclick="clearCacheAndReload(event)">⟳ 清除系統快取 Clear Cache</button>
@@ -384,7 +398,7 @@
     const API_BASE = "https://rt.data.gov.hk/v1/transport/citybus-nwfb";
     const ITEMS_PER_PAGE = 8;
     
-    // 還原為預設方向之高解析度 GPS SVG
+    // GPS SVG 圖示
     const GPS_SVG = `<svg class="gps-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14h2v2h-2v-2zm1-12C9.24 4 7 6.24 7 9h2c0-1.66 1.34-3 3-3s3 1.34 3 3c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.76-2.24-5-5-5z" opacity="0"/><path d="M4.01 10.32C5.55 7.15 8.5 5 12 5c3.5 0 6.45 2.15 8.01 5.32l1.79-1C19.83 5.4 16.21 3 12 3 7.79 3 4.17 5.4 2.22 9.32l1.79 1z"/><path d="M8.2 13.06C9.1 11.23 10.45 10 12 10c1.55 0 2.9.89 3.8 2.06l1.6-1.2C16.14 9.24 14.19 8 12 8c-2.19 0-4.14 1.24-5.4 2.86l1.6 1.2z"/></svg>`;
 
     const PLATFORM_ROUTES = {
@@ -399,6 +413,9 @@
         "C": ["37B", "37X", "38", "42", "42C", "49X", "70", "70P", "72", "77", "107", "107P", "170", "770", "N72", "N170"]
       }
     };
+
+    // 指定過海路線 (紅底)
+    const XHT_ROUTES = ["107", "107P", "170", "171", "171A", "171P", "671", "671X"];
 
     const DIR_KEYWORDS = {
       "N": ["銅鑼灣", "北角", "筲箕灣", "柴灣", "灣仔", "金鐘", "中環", "上環", "九龍", "新界", "深水埗", "觀塘", "荔枝角", "鑽石山", "沙田", "旺角"],
@@ -619,6 +636,14 @@
         const cell = document.createElement("div");
         cell.className = "grid-item";
 
+        // 動態判斷配色類別
+        let routeClass = "route-box";
+        if (XHT_ROUTES.includes(item.route)) {
+          routeClass += " xht";
+        } else if (item.route.startsWith("N")) {
+          routeClass += " night";
+        }
+
         let etaDisplay = '';
         if (item.mins <= 1) {
           etaDisplay = `
@@ -640,7 +665,7 @@
         let gpsSvgCode = GPS_SVG.replace('class="gps-icon"', `class="gps-icon ${item.hasGpsIcon ? 'active' : ''}"`);
 
         cell.innerHTML = `
-          <div class="route-box">${item.route}</div>
+          <div class="${routeClass}">${item.route}</div>
           <div class="eta-section">
             ${gpsSvgCode}
             ${etaDisplay}
