@@ -45,19 +45,55 @@
       background: var(--ctb-blue-bg);
     }
 
+    /* 共用的頂部和底部留空長條 (主頁與PIDS共用) */
+    .header {
+      height: 6%;
+      background: transparent;
+      color: white;
+      display: flex;
+      align-items: center;
+      padding: 0 1.5cqw;
+      font-size: 1.2cqw;
+      font-weight: normal;
+      letter-spacing: 0.05cqw;
+      cursor: pointer;
+    }
+
+    .empty-ticker {
+      height: 6%;
+      background: transparent;
+      width: 100%;
+    }
+
+    /* 共用的中央面板 (主頁與PIDS共用) */
+    .panel-content {
+      flex: 1;
+      background: linear-gradient(135deg, var(--bg-gradient-top) 0%, var(--bg-gradient-bottom) 100%);
+      border-radius: 0 4cqw 0 4cqw;
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+    }
+
     /* 選單介面 */
     #menu-container {
       width: 100%;
       height: 100%;
-      background: #f4f4f4;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      align-items: center;
       z-index: 100;
       position: absolute;
       top: 0;
       left: 0;
+    }
+
+    .menu-inner {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
     }
 
     .menu-title {
@@ -80,7 +116,7 @@
     .menu-row {
       display: flex;
       gap: 3cqw;
-      margin-bottom: 3cqw;
+      margin-bottom: 1.5cqw;
     }
 
     .direction-group {
@@ -116,46 +152,40 @@
     }
     .btn-platform:hover { background: #002299; }
 
+    /* 清除快取迷你按鍵 */
+    .btn-clear-cache {
+      position: absolute;
+      bottom: 1.5cqw;
+      padding: 0.6cqw 1.2cqw;
+      font-size: 1.1cqw;
+      color: #666;
+      background: rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 0.5cqw;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-clear-cache:hover {
+      background: rgba(0, 0, 0, 0.1);
+      color: #333;
+    }
+
     /* PIDS 主體介面 */
     #pids-container {
       width: 100%;
       height: 100%;
-      background: var(--ctb-blue-bg);
       display: none;
       flex-direction: column;
       position: relative;
     }
 
-    .header {
-      height: 6%;
-      background: transparent;
-      color: white;
-      display: flex;
-      align-items: center;
-      padding: 0 1.5cqw;
-      font-size: 1.2cqw;
-      font-weight: normal;
-      letter-spacing: 0.05cqw;
-      cursor: pointer;
-    }
-
     .grid-container {
-      flex: 1;
       display: grid;
       grid-template-columns: 1fr 1fr;
       grid-template-rows: repeat(4, 1fr);
       grid-auto-flow: column;
       padding: 1.5cqw 0;
-      background: linear-gradient(135deg, var(--bg-gradient-top) 0%, var(--bg-gradient-bottom) 100%);
-      border-radius: 0 4cqw 0 4cqw;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .empty-ticker {
-      height: 6%;
-      background: transparent;
-      width: 100%;
+      height: 100%;
     }
 
     .grid-item {
@@ -189,16 +219,14 @@
       flex: 1;
     }
 
-    /* 全新 GPS 圖示樣式：打斜、調整粗細與位置 */
     .gps-icon {
-      width: 1.5cqw;
-      height: 1.5cqw;
+      width: 1.6cqw;
+      height: 1.6cqw;
       margin-left: 0.5cqw;
-      margin-right: 1cqw;
+      margin-right: 0.8cqw;
       margin-bottom: 3.5cqw; 
+      color: var(--gps-orange);
       opacity: 0;
-      transform: rotate(25deg); /* 將圖示打斜 25 度 */
-      transition: opacity 0.3s ease;
     }
     .gps-icon.active { opacity: 1; }
 
@@ -290,40 +318,50 @@
 </head>
 <body>
 
-  <!-- 將整個應用包裝入智慧等比縮放容器內 -->
   <div id="app-wrapper">
     <!-- 啟動選單 -->
     <div id="menu-container">
-      <div class="menu-title">
-        香港仔隧道巴士轉乘站PIDS 系統<br>
-        <span style="font-size: 2.2cqw;">Aberdeen Tunnel BBI PIDS System</span>
-      </div>
-      <div class="menu-subtitle">↓ 請選擇月台 Please select a platform ↓</div>
-      <div class="menu-row">
-        <!-- 北行 -->
-        <div class="direction-group">
-          <div class="dir-title">北行 - 往港島北及九龍</div>
-          <button class="btn-platform" onclick="startSystem('N', 'A')">月台 A (107, 170, 171, 671 等)</button>
-          <button class="btn-platform" onclick="startSystem('N', 'B')">月台 B (6X, 37A, 70, 90, 260 等)</button>
-          <button class="btn-platform" onclick="startSystem('N', 'C')">月台 C (38, 42, 65, 72, 77, 592 等)</button>
+      <div class="header"></div> <!-- 頂部留空對齊 -->
+      
+      <div class="panel-content menu-inner">
+        <div class="menu-title">
+          香港仔隧道巴士轉乘站PIDS 系統<br>
+          <span style="font-size: 2.2cqw;">Aberdeen Tunnel BBI PIDS System</span>
         </div>
-        <!-- 南行 -->
-        <div class="direction-group">
-          <div class="dir-title">南行 - 往港島南</div>
-          <button class="btn-platform" onclick="startSystem('S', 'A')">月台 A (6A, 6X, 65, 260)</button>
-          <button class="btn-platform" onclick="startSystem('S', 'B')">月台 B (72A, 75, 90, 97, 171, 592 等)</button>
-          <button class="btn-platform" onclick="startSystem('S', 'C')">月台 C (37B, 38, 42, 70, 72, 107 等)</button>
+        <div class="menu-subtitle">↓ 請選擇月台 Please select a platform ↓</div>
+        
+        <div class="menu-row">
+          <!-- 北行 -->
+          <div class="direction-group">
+            <div class="dir-title">北行 - 往港島北及九龍</div>
+            <button class="btn-platform" onclick="startSystem('N', 'A')">月台 A (107, 170, 171, 671 等)</button>
+            <button class="btn-platform" onclick="startSystem('N', 'B')">月台 B (6X, 37A, 70, 90, 260 等)</button>
+            <button class="btn-platform" onclick="startSystem('N', 'C')">月台 C (38, 42, 65, 72, 77, 592 等)</button>
+          </div>
+          <!-- 南行 -->
+          <div class="direction-group">
+            <div class="dir-title">南行 - 往港島南</div>
+            <button class="btn-platform" onclick="startSystem('S', 'A')">月台 A (6A, 6X, 65, 260)</button>
+            <button class="btn-platform" onclick="startSystem('S', 'B')">月台 B (72A, 75, 90, 97, 171, 592 等)</button>
+            <button class="btn-platform" onclick="startSystem('S', 'C')">月台 C (37B, 38, 42, 70, 72, 107 等)</button>
+          </div>
         </div>
+        <div style="font-size: 1.1cqw; color: #666; margin-top: 1cqw;">* 雙擊 PIDS 頂部藍色標題列可返回此選單</div>
+        
+        <!-- 迷你獨立清除快取按鈕 -->
+        <button class="btn-clear-cache" onclick="clearCacheAndReload(event)">⟳ 清除系統快取 Clear Cache</button>
       </div>
-      <div style="font-size: 1cqw; color: #666; margin-top: 2cqw;">* 雙擊 PIDS 頂部藍色標題列可返回此選單 或 清除快取</div>
+      
+      <div class="empty-ticker"></div> <!-- 底部留空對齊 -->
     </div>
 
     <!-- PIDS 顯示屏 -->
     <div id="pids-container" ondblclick="toggleFullScreen()">
-      <div class="header" id="header-text" ondblclick="clearCacheAndReload(event)">月台 Platform</div>
+      <div class="header" id="header-text" ondblclick="backToMenu()">月台 Platform</div>
       
       <!-- 中間漸層面板 -->
-      <div class="grid-container" id="grid-container">
+      <div class="panel-content">
+        <div class="grid-container" id="grid-container"></div>
         
         <!-- 系統載入與進度條 -->
         <div id="loading-overlay">
@@ -335,7 +373,6 @@
 
         <!-- 暫無班次訊息 -->
         <div class="status-msg" id="no-departures-msg"></div>
-
       </div>
       
       <div class="empty-ticker"></div>
@@ -346,11 +383,7 @@
     const API_BASE = "https://rt.data.gov.hk/v1/transport/citybus-nwfb";
     const ITEMS_PER_PAGE = 8;
     
-    // 全新：精準繪製無圓點、兩條粗弧線的 SVG，配合 CSS 的 rotate 打斜
-    const GPS_SVG = `<svg class="gps-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-      <path d="M 15 85 A 70 70 0 0 1 85 15" fill="none" stroke="var(--gps-orange)" stroke-width="18" stroke-linecap="round"/>
-      <path d="M 15 50 A 35 35 0 0 1 50 15" fill="none" stroke="var(--gps-orange)" stroke-width="18" stroke-linecap="round"/>
-    </svg>`;
+    const GPS_SVG = `<svg class="gps-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"><g transform="rotate(25 12 12)"><path d="M4 12a8 8 0 0 1 8 8" /><path d="M4 4a16 16 0 0 1 16 16" /></g></svg>`;
 
     const PLATFORM_ROUTES = {
       "N": {
@@ -382,7 +415,8 @@
     async function startSystem(dir, plat) {
       document.getElementById('menu-container').style.display = 'none';
       document.getElementById('pids-container').style.display = 'flex';
-      document.getElementById('header-text').innerHTML = `月台${plat} Platform ${plat} (雙擊返回選單/清除快取)`;
+      // 移除文字提示
+      document.getElementById('header-text').innerHTML = `月台${plat} Platform ${plat}`;
       
       currentConfig = { dir, plat };
       currentRoutes = PLATFORM_ROUTES[dir][plat];
@@ -411,14 +445,15 @@
 
     function clearCacheAndReload(e) {
       e.stopPropagation();
-      if(confirm("即將清除隧道轉車站的站位快取並返回選單，確定嗎？")) {
+      if(confirm("即將清除隧道轉車站的站位快取並重新載入，確定嗎？")) {
         for(let i = localStorage.length - 1; i >= 0; i--) {
             const key = localStorage.key(i);
             if(key && key.startsWith("CTB_ABT_")) {
                 localStorage.removeItem(key);
             }
         }
-        backToMenu();
+        alert("快取已清除！");
+        location.reload();
       }
     }
 
@@ -527,7 +562,9 @@
 
                 if (diffMins >= 0) {
                   const rmk = (item.rmk_tc || "").trim();
-                  const hasGpsIcon = rmk === "" || (!rmk.includes("預定") && !rmk.includes("原定"));
+                  const isRealtime = rmk === "" || (!rmk.includes("預定") && !rmk.includes("原定"));
+                  
+                  const hasGpsIcon = isRealtime && (diffMins <= 20);
 
                   if (!earliest || diffMins < earliest.mins) {
                     earliest = {
