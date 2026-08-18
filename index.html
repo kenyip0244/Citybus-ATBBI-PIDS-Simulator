@@ -46,10 +46,20 @@
     }
 
     .menu-title {
-      font-size: 3vw;
+      font-size: 3.5vw;
       color: var(--text-blue);
-      margin-bottom: 2vw;
+      margin-bottom: 0.5vw;
       font-weight: bold;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .menu-subtitle {
+      font-size: 1.8vw;
+      color: #555;
+      margin-bottom: 2.5vw;
+      font-weight: bold;
+      text-align: center;
     }
 
     .menu-row {
@@ -263,7 +273,11 @@
 
   <!-- 啟動選單 -->
   <div id="menu-container">
-    <div class="menu-title">香港仔隧道巴士轉乘站 PIDS 啟動面板</div>
+    <div class="menu-title">
+      香港仔隧道巴士轉乘站PIDS 系統<br>
+      <span style="font-size: 2.2vw;">Aberdeen Tunnel BBI PIDS System</span>
+    </div>
+    <div class="menu-subtitle">↓ 請選擇月台 Please select a platform ↓</div>
     <div class="menu-row">
       <!-- 北行 -->
       <div class="direction-group">
@@ -280,7 +294,7 @@
         <button class="btn-platform" onclick="startSystem('S', 'C')">月台 C (37B, 38, 42, 70, 72, 107 等)</button>
       </div>
     </div>
-    <div style="font-size: 1vw; color: #666;">* 雙擊 PIDS 頂部藍色標題列可返回此選單 或 清除快取</div>
+    <div style="font-size: 1vw; color: #666; margin-top: 2vw;">* 雙擊 PIDS 頂部藍色標題列可返回此選單 或 清除快取</div>
   </div>
 
   <!-- PIDS 顯示屏 -->
@@ -332,7 +346,7 @@
     };
 
     let currentConfig = null; 
-    let routeStopMap = {}; // 取代 activeStopIds，直接映射 Route -> Stop ID
+    let routeStopMap = {};
     let currentRoutes = [];
     let activeDepartures = [];
     let currentPage = 0;
@@ -370,11 +384,9 @@
       document.getElementById('menu-container').style.display = 'flex';
     }
 
-    // 清除快取並返回選單
     function clearCacheAndReload(e) {
       e.stopPropagation();
       if(confirm("即將清除隧道轉車站的站位快取並返回選單，確定嗎？")) {
-        // 清除所有開頭為 CTB_ABT_ 的快取
         for(let i = localStorage.length - 1; i >= 0; i--) {
             const key = localStorage.key(i);
             if(key && key.startsWith("CTB_ABT_")) {
@@ -389,7 +401,6 @@
       const cacheKey = `CTB_ABT_${currentConfig.dir}_${currentConfig.plat}_V1`;
       const cached = localStorage.getItem(cacheKey);
 
-      // 如果有完整快取，直接套用並跳過進度條
       if (cached) {
         try {
           const parsedMap = JSON.parse(cached);
@@ -403,7 +414,6 @@
         }
       }
 
-      // 如果沒有快取或快取不完整，顯示進度條並重新尋址
       const overlay = document.getElementById("loading-overlay");
       const pBar = document.getElementById("progress-bar");
       const noDepMsg = document.getElementById("no-departures-msg");
@@ -449,7 +459,6 @@
           } catch(e) {}
         }
         
-        // 若完全找不到該路線的隧道站點，標記為 NOT_FOUND 防止下次重複掃描
         if (!routeFound) {
           routeStopMap[route] = "NOT_FOUND";
         }
@@ -458,7 +467,6 @@
         pBar.style.width = `${(processedRoutes / totalRoutes) * 100}%`;
       }
       
-      // 寫入快取
       localStorage.setItem(cacheKey, JSON.stringify(routeStopMap));
       
       await new Promise(r => setTimeout(r, 400));
@@ -472,7 +480,6 @@
       try {
         const results = [];
         
-        // 透過 Map 一對一查詢，極大提升更新效率
         for (const route of currentRoutes) {
           const stopId = routeStopMap[route];
           if (!stopId || stopId === "NOT_FOUND") continue;
