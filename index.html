@@ -95,30 +95,43 @@
     #pids-container {
       width: 100vw;
       height: 100vh;
-      background: linear-gradient(135deg, var(--bg-gradient-top) 0%, var(--bg-gradient-bottom) 100%);
+      /* 將整體底色改為城巴藍色，填補圓角背後的空間 */
+      background: var(--ctb-blue-bg);
       display: none;
       flex-direction: column;
       position: relative;
     }
 
     .header {
-      height: 8%;
-      background: var(--ctb-blue-bg);
+      height: 6%;
+      background: transparent; /* 背景由父元素提供 */
       color: white;
       display: flex;
       align-items: center;
-      padding: 0 2vw;
-      font-size: 1.8vw;
-      font-weight: bold;
+      padding: 0 1.5vw;
+      font-size: 1.2vw;
+      font-weight: normal;
+      letter-spacing: 0.5px;
       cursor: pointer;
     }
 
+    /* 將白色/漸層背景移至班次顯示區塊，並加上對角圓角 */
     .grid-container {
       flex: 1;
       display: grid;
       grid-template-columns: 1fr 1fr;
       grid-template-rows: repeat(4, 1fr);
-      padding: 1vw 0;
+      padding: 1.5vw 0;
+      background: linear-gradient(135deg, var(--bg-gradient-top) 0%, var(--bg-gradient-bottom) 100%);
+      border-radius: 0 4vw 0 4vw; /* 左上 0, 右上 4vw, 右下 0, 左下 4vw */
+      overflow: hidden;
+    }
+
+    /* 底部預留跑馬燈的藍色長條 */
+    .empty-ticker {
+      height: 6%;
+      background: transparent; /* 背景由父元素提供 */
+      width: 100%;
     }
 
     .grid-item {
@@ -196,6 +209,7 @@
       font-weight: bold;
       text-align: center;
       width: 100%;
+      z-index: 10;
     }
   </style>
 </head>
@@ -226,7 +240,13 @@
   <!-- PIDS 顯示屏 -->
   <div id="pids-container" ondblclick="toggleFullScreen()">
     <div class="header" id="header-text" ondblclick="backToMenu(event)">月台 Platform</div>
+    
+    <!-- 中間漸層區塊 (帶有右上及左下圓角) -->
     <div class="grid-container" id="grid-container"></div>
+    
+    <!-- 底部預留跑馬燈的空藍色長條 -->
+    <div class="empty-ticker"></div>
+
     <div class="status-msg" id="loadingMsg" style="display: none;"></div>
   </div>
 
