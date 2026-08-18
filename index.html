@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aberdeen Tunnel BBI PIDS Simulator</title>
+  <!-- 引入 Roboto 字體 -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
   <style>
     :root {
       --ctb-blue-bg: #0033cc;
@@ -24,7 +26,7 @@
     body {
       width: 100vw;
       height: 100vh;
-      background-color: #333;
+      background-color: #000;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -32,10 +34,21 @@
       font-family: "Arial", "PingFang HK", "Microsoft JhengHei", "Heiti TC", sans-serif;
     }
 
+    #app-wrapper {
+      width: 100%;
+      height: 100%;
+      max-width: calc(100vh * 16 / 9);
+      max-height: calc(100vw * 9 / 16);
+      container-type: size;
+      position: relative;
+      overflow: hidden;
+      background: var(--ctb-blue-bg);
+    }
+
     /* 選單介面 */
     #menu-container {
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
       background: #f4f4f4;
       display: flex;
       flex-direction: column;
@@ -43,59 +56,61 @@
       align-items: center;
       z-index: 100;
       position: absolute;
+      top: 0;
+      left: 0;
     }
 
     .menu-title {
-      font-size: 3.5vw;
+      font-size: 3.5cqw;
       color: var(--text-blue);
-      margin-bottom: 0.5vw;
+      margin-bottom: 0.5cqw;
       font-weight: bold;
       text-align: center;
       line-height: 1.2;
     }
 
     .menu-subtitle {
-      font-size: 1.8vw;
+      font-size: 1.8cqw;
       color: #555;
-      margin-bottom: 2.5vw;
+      margin-bottom: 2.5cqw;
       font-weight: bold;
       text-align: center;
     }
 
     .menu-row {
       display: flex;
-      gap: 3vw;
-      margin-bottom: 3vw;
+      gap: 3cqw;
+      margin-bottom: 3cqw;
     }
 
     .direction-group {
       background: white;
-      padding: 2vw;
-      border-radius: 1vw;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      padding: 2cqw;
+      border-radius: 1cqw;
+      box-shadow: 0 0.4cqw 1.5cqw rgba(0,0,0,0.1);
       text-align: center;
     }
 
     .dir-title {
-      font-size: 1.8vw;
+      font-size: 1.8cqw;
       color: #333;
-      margin-bottom: 1.5vw;
+      margin-bottom: 1.5cqw;
       font-weight: bold;
-      border-bottom: 2px solid var(--ctb-blue-bg);
-      padding-bottom: 0.5vw;
+      border-bottom: 0.2cqw solid var(--ctb-blue-bg);
+      padding-bottom: 0.5cqw;
     }
 
     .btn-platform {
       display: block;
       width: 100%;
-      padding: 1vw 2vw;
-      margin-bottom: 1vw;
-      font-size: 1.2vw;
+      padding: 1cqw 2cqw;
+      margin-bottom: 1cqw;
+      font-size: 1.2cqw;
       font-weight: bold;
       color: white;
       background: var(--ctb-blue-bg);
       border: none;
-      border-radius: 0.5vw;
+      border-radius: 0.5cqw;
       cursor: pointer;
       transition: background 0.2s;
     }
@@ -103,8 +118,8 @@
 
     /* PIDS 主體介面 */
     #pids-container {
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
       background: var(--ctb-blue-bg);
       display: none;
       flex-direction: column;
@@ -117,10 +132,10 @@
       color: white;
       display: flex;
       align-items: center;
-      padding: 0 1.5vw;
-      font-size: 1.2vw;
+      padding: 0 1.5cqw;
+      font-size: 1.2cqw;
       font-weight: normal;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.05cqw;
       cursor: pointer;
     }
 
@@ -130,9 +145,9 @@
       grid-template-columns: 1fr 1fr;
       grid-template-rows: repeat(4, 1fr);
       grid-auto-flow: column;
-      padding: 1.5vw 0;
+      padding: 1.5cqw 0;
       background: linear-gradient(135deg, var(--bg-gradient-top) 0%, var(--bg-gradient-bottom) 100%);
-      border-radius: 0 4vw 0 4vw;
+      border-radius: 0 4cqw 0 4cqw;
       overflow: hidden;
       position: relative;
     }
@@ -146,9 +161,9 @@
     .grid-item {
       display: flex;
       align-items: center;
-      padding: 0 3vw;
-      border-right: 1px solid rgba(0, 51, 153, 0.1);
-      border-bottom: 1px solid rgba(0, 51, 153, 0.1);
+      padding: 0 3cqw;
+      border-right: 0.1cqw solid rgba(0, 51, 153, 0.1);
+      border-bottom: 0.1cqw solid rgba(0, 51, 153, 0.1);
     }
     .grid-item:nth-child(n+5) { border-right: none; }
     .grid-item:nth-child(4n) { border-bottom: none; }
@@ -156,49 +171,53 @@
     .route-box {
       background: var(--route-bg);
       color: white;
-      font-size: 5vw;
+      font-family: 'Roboto', sans-serif;
+      font-size: 5cqw;
       font-weight: bold;
-      padding: 0.5vw 2vw;
-      border-radius: 0.8vw;
-      min-width: 12vw;
+      padding: 0.5cqw 2cqw;
+      border-radius: 0.8cqw;
+      min-width: 12cqw;
       text-align: center;
       line-height: 1.1;
-      letter-spacing: -1px;
+      letter-spacing: -0.1cqw;
     }
 
     .eta-section {
       display: flex;
       align-items: center;
-      margin-left: 1vw;
+      margin-left: 1cqw;
       flex: 1;
     }
 
+    /* 全新 GPS 圖示樣式：打斜、調整粗細與位置 */
     .gps-icon {
-      width: 1.4vw;
-      height: 1.4vw;
-      margin-left: 0.5vw;
-      margin-right: 1vw;
-      margin-bottom: 3.5vw; 
-      fill: var(--gps-orange);
+      width: 1.5cqw;
+      height: 1.5cqw;
+      margin-left: 0.5cqw;
+      margin-right: 1cqw;
+      margin-bottom: 3.5cqw; 
       opacity: 0;
+      transform: rotate(25deg); /* 將圖示打斜 25 度 */
+      transition: opacity 0.3s ease;
     }
     .gps-icon.active { opacity: 1; }
 
     .eta-number {
-      font-size: 6.5vw;
+      font-family: 'Roboto', sans-serif;
+      font-size: 6.5cqw;
       font-weight: bold;
       color: var(--text-blue);
       line-height: 1;
-      width: 7vw;
+      width: 7cqw;
       text-align: right;
     }
 
     .eta-text {
       display: flex;
       flex-direction: column;
-      margin-left: 2.5vw;
+      margin-left: 2.5cqw;
       color: #111111;
-      font-size: 1.1vw;
+      font-size: 1.1cqw;
       font-weight: bold;
       line-height: 1.2;
     }
@@ -207,10 +226,10 @@
       display: flex;
       flex-direction: column;
       color: var(--text-blue);
-      font-size: 1.8vw;
+      font-size: 1.8cqw;
       font-weight: bold;
       line-height: 1.2;
-      margin-left: 1.5vw;
+      margin-left: 1.5cqw;
     }
 
     /* 載入遮罩層與進度條 */
@@ -229,21 +248,21 @@
     }
 
     .loading-text {
-      font-size: 2.5vw;
+      font-size: 2.5cqw;
       color: var(--text-blue);
       font-weight: bold;
       text-align: center;
-      margin-bottom: 2vw;
+      margin-bottom: 2cqw;
       line-height: 1.3;
     }
 
     .progress-container {
-      width: 50vw;
-      height: 1.5vw;
+      width: 50cqw;
+      height: 1.5cqw;
       background-color: rgba(0, 51, 153, 0.15);
-      border-radius: 1vw;
+      border-radius: 1cqw;
       overflow: hidden;
-      border: 0.2vw solid var(--text-blue);
+      border: 0.2cqw solid var(--text-blue);
     }
 
     .progress-bar {
@@ -259,7 +278,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 2.5vw;
+      font-size: 2.5cqw;
       color: var(--text-blue);
       font-weight: bold;
       text-align: center;
@@ -271,61 +290,67 @@
 </head>
 <body>
 
-  <!-- 啟動選單 -->
-  <div id="menu-container">
-    <div class="menu-title">
-      香港仔隧道巴士轉乘站PIDS 系統<br>
-      <span style="font-size: 2.2vw;">Aberdeen Tunnel BBI PIDS System</span>
-    </div>
-    <div class="menu-subtitle">↓ 請選擇月台 Please select a platform ↓</div>
-    <div class="menu-row">
-      <!-- 北行 -->
-      <div class="direction-group">
-        <div class="dir-title">北行 - 往港島北及九龍</div>
-        <button class="btn-platform" onclick="startSystem('N', 'A')">月台 A (107, 170, 171, 671 等)</button>
-        <button class="btn-platform" onclick="startSystem('N', 'B')">月台 B (6X, 37A, 70, 90, 260 等)</button>
-        <button class="btn-platform" onclick="startSystem('N', 'C')">月台 C (38, 42, 65, 72, 77, 592 等)</button>
+  <!-- 將整個應用包裝入智慧等比縮放容器內 -->
+  <div id="app-wrapper">
+    <!-- 啟動選單 -->
+    <div id="menu-container">
+      <div class="menu-title">
+        香港仔隧道巴士轉乘站PIDS 系統<br>
+        <span style="font-size: 2.2cqw;">Aberdeen Tunnel BBI PIDS System</span>
       </div>
-      <!-- 南行 -->
-      <div class="direction-group">
-        <div class="dir-title">南行 - 往港島南</div>
-        <button class="btn-platform" onclick="startSystem('S', 'A')">月台 A (6A, 6X, 65, 260)</button>
-        <button class="btn-platform" onclick="startSystem('S', 'B')">月台 B (72A, 75, 90, 97, 171, 592 等)</button>
-        <button class="btn-platform" onclick="startSystem('S', 'C')">月台 C (37B, 38, 42, 70, 72, 107 等)</button>
-      </div>
-    </div>
-    <div style="font-size: 1vw; color: #666; margin-top: 2vw;">* 雙擊 PIDS 頂部藍色標題列可返回此選單 或 清除快取</div>
-  </div>
-
-  <!-- PIDS 顯示屏 -->
-  <div id="pids-container" ondblclick="toggleFullScreen()">
-    <div class="header" id="header-text" ondblclick="clearCacheAndReload(event)">月台 Platform</div>
-    
-    <!-- 中間漸層面板 -->
-    <div class="grid-container" id="grid-container">
-      
-      <!-- 系統載入與進度條 -->
-      <div id="loading-overlay">
-        <div class="loading-text">系統載入中...<br>System Loading...</div>
-        <div class="progress-container">
-          <div class="progress-bar" id="progress-bar"></div>
+      <div class="menu-subtitle">↓ 請選擇月台 Please select a platform ↓</div>
+      <div class="menu-row">
+        <!-- 北行 -->
+        <div class="direction-group">
+          <div class="dir-title">北行 - 往港島北及九龍</div>
+          <button class="btn-platform" onclick="startSystem('N', 'A')">月台 A (107, 170, 171, 671 等)</button>
+          <button class="btn-platform" onclick="startSystem('N', 'B')">月台 B (6X, 37A, 70, 90, 260 等)</button>
+          <button class="btn-platform" onclick="startSystem('N', 'C')">月台 C (38, 42, 65, 72, 77, 592 等)</button>
+        </div>
+        <!-- 南行 -->
+        <div class="direction-group">
+          <div class="dir-title">南行 - 往港島南</div>
+          <button class="btn-platform" onclick="startSystem('S', 'A')">月台 A (6A, 6X, 65, 260)</button>
+          <button class="btn-platform" onclick="startSystem('S', 'B')">月台 B (72A, 75, 90, 97, 171, 592 等)</button>
+          <button class="btn-platform" onclick="startSystem('S', 'C')">月台 C (37B, 38, 42, 70, 72, 107 等)</button>
         </div>
       </div>
-
-      <!-- 暫無班次訊息 -->
-      <div class="status-msg" id="no-departures-msg"></div>
-
+      <div style="font-size: 1cqw; color: #666; margin-top: 2cqw;">* 雙擊 PIDS 頂部藍色標題列可返回此選單 或 清除快取</div>
     </div>
-    
-    <div class="empty-ticker"></div>
+
+    <!-- PIDS 顯示屏 -->
+    <div id="pids-container" ondblclick="toggleFullScreen()">
+      <div class="header" id="header-text" ondblclick="clearCacheAndReload(event)">月台 Platform</div>
+      
+      <!-- 中間漸層面板 -->
+      <div class="grid-container" id="grid-container">
+        
+        <!-- 系統載入與進度條 -->
+        <div id="loading-overlay">
+          <div class="loading-text">系統載入中...<br>System Loading...</div>
+          <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+          </div>
+        </div>
+
+        <!-- 暫無班次訊息 -->
+        <div class="status-msg" id="no-departures-msg"></div>
+
+      </div>
+      
+      <div class="empty-ticker"></div>
+    </div>
   </div>
 
   <script>
     const API_BASE = "https://rt.data.gov.hk/v1/transport/citybus-nwfb";
     const ITEMS_PER_PAGE = 8;
     
-    // GPS SVG 圖示
-    const GPS_SVG = `<svg class="gps-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14h2v2h-2v-2zm1-12C9.24 4 7 6.24 7 9h2c0-1.66 1.34-3 3-3s3 1.34 3 3c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.76-2.24-5-5-5z" opacity="0"/><path d="M4.01 10.32C5.55 7.15 8.5 5 12 5c3.5 0 6.45 2.15 8.01 5.32l1.79-1C19.83 5.4 16.21 3 12 3 7.79 3 4.17 5.4 2.22 9.32l1.79 1z"/><path d="M8.2 13.06C9.1 11.23 10.45 10 12 10c1.55 0 2.9.89 3.8 2.06l1.6-1.2C16.14 9.24 14.19 8 12 8c-2.19 0-4.14 1.24-5.4 2.86l1.6 1.2z"/></svg>`;
+    // 全新：精準繪製無圓點、兩條粗弧線的 SVG，配合 CSS 的 rotate 打斜
+    const GPS_SVG = `<svg class="gps-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 15 85 A 70 70 0 0 1 85 15" fill="none" stroke="var(--gps-orange)" stroke-width="18" stroke-linecap="round"/>
+      <path d="M 15 50 A 35 35 0 0 1 50 15" fill="none" stroke="var(--gps-orange)" stroke-width="18" stroke-linecap="round"/>
+    </svg>`;
 
     const PLATFORM_ROUTES = {
       "N": {
@@ -561,7 +586,7 @@
           etaDisplay = `
             <div class="arriving-text">
               <span>即將抵達</span>
-              <span style="font-size: 1.2vw;">Arriving</span>
+              <span style="font-size: 1.2cqw;">Arriving</span>
             </div>
           `;
         } else {
