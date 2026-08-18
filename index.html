@@ -80,7 +80,7 @@
       width: 100%;
       padding: 1vw 2vw;
       margin-bottom: 1vw;
-      font-size: 1.5vw;
+      font-size: 1.2vw;
       font-weight: bold;
       color: white;
       background: var(--ctb-blue-bg);
@@ -95,7 +95,6 @@
     #pids-container {
       width: 100vw;
       height: 100vh;
-      /* 將整體底色改為城巴藍色，填補圓角背後的空間 */
       background: var(--ctb-blue-bg);
       display: none;
       flex-direction: column;
@@ -104,7 +103,7 @@
 
     .header {
       height: 6%;
-      background: transparent; /* 背景由父元素提供 */
+      background: transparent;
       color: white;
       display: flex;
       align-items: center;
@@ -115,7 +114,6 @@
       cursor: pointer;
     }
 
-    /* 將白色/漸層背景移至班次顯示區塊，並加上對角圓角 */
     .grid-container {
       flex: 1;
       display: grid;
@@ -123,14 +121,13 @@
       grid-template-rows: repeat(4, 1fr);
       padding: 1.5vw 0;
       background: linear-gradient(135deg, var(--bg-gradient-top) 0%, var(--bg-gradient-bottom) 100%);
-      border-radius: 0 4vw 0 4vw; /* 左上 0, 右上 4vw, 右下 0, 左下 4vw */
+      border-radius: 0 4vw 0 4vw;
       overflow: hidden;
     }
 
-    /* 底部預留跑馬燈的藍色長條 */
     .empty-ticker {
       height: 6%;
-      background: transparent; /* 背景由父元素提供 */
+      background: transparent;
       width: 100%;
     }
 
@@ -222,16 +219,16 @@
       <!-- 北行 -->
       <div class="direction-group">
         <div class="dir-title">北行 - 往港島北及九龍</div>
-        <button class="btn-platform" onclick="startSystem('N', 'A')">月台 A (107, 170, 171 等)</button>
-        <button class="btn-platform" onclick="startSystem('N', 'B')">月台 B (6X, 70, 90 等)</button>
-        <button class="btn-platform" onclick="startSystem('N', 'C')">月台 C (38, 72, 592 等)</button>
+        <button class="btn-platform" onclick="startSystem('N', 'A')">月台 A (107, 170, 171, 671 等)</button>
+        <button class="btn-platform" onclick="startSystem('N', 'B')">月台 B (6X, 37A, 70, 90, 260 等)</button>
+        <button class="btn-platform" onclick="startSystem('N', 'C')">月台 C (38, 42, 65, 72, 77, 592 等)</button>
       </div>
       <!-- 南行 -->
       <div class="direction-group">
         <div class="dir-title">南行 - 往港島南</div>
-        <button class="btn-platform" onclick="startSystem('S', 'A')">月台 A (6A, 6X, 65 等)</button>
-        <button class="btn-platform" onclick="startSystem('S', 'B')">月台 B (72A, 90, 592 等)</button>
-        <button class="btn-platform" onclick="startSystem('S', 'C')">月台 C (38, 72, 770 等)</button>
+        <button class="btn-platform" onclick="startSystem('S', 'A')">月台 A (6A, 6X, 65, 260)</button>
+        <button class="btn-platform" onclick="startSystem('S', 'B')">月台 B (72A, 75, 90, 97, 171, 592 等)</button>
+        <button class="btn-platform" onclick="startSystem('S', 'C')">月台 C (37B, 38, 42, 70, 72, 107 等)</button>
       </div>
     </div>
     <div style="font-size: 1vw; color: #666;">* 雙擊 PIDS 頂部藍色標題列可返回此選單</div>
@@ -257,7 +254,7 @@
     // GPS SVG 圖示 (仿實體弧線設計)
     const GPS_SVG = `<svg class="gps-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14h2v2h-2v-2zm1-12C9.24 4 7 6.24 7 9h2c0-1.66 1.34-3 3-3s3 1.34 3 3c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.76-2.24-5-5-5z" opacity="0"/><path d="M4.01 10.32C5.55 7.15 8.5 5 12 5c3.5 0 6.45 2.15 8.01 5.32l1.79-1C19.83 5.4 16.21 3 12 3 7.79 3 4.17 5.4 2.22 9.32l1.79 1z"/><path d="M8.2 13.06C9.1 11.23 10.45 10 12 10c1.55 0 2.9.89 3.8 2.06l1.6-1.2C16.14 9.24 14.19 8 12 8c-2.19 0-4.14 1.24-5.4 2.86l1.6 1.2z"/></svg>`;
 
-    // 官方通告之路線分配
+    // 官方通告之路線全面精準綁定
     const PLATFORM_ROUTES = {
       "N": {
         "A": ["107", "107P", "170", "171", "171A", "171P", "671", "671X", "N170", "N171"],
@@ -277,7 +274,7 @@
       "S": ["黃竹坑", "深水灣", "淺水灣", "赤柱", "鴨脷洲", "香港仔", "華富", "置富", "海怡半島", "利東", "田灣", "石排灣"]
     };
 
-    let currentConfig = null; // { dir, plat }
+    let currentConfig = null; 
     let activeStopIds = new Set();
     let currentRoutes = [];
     let activeDepartures = [];
@@ -297,7 +294,6 @@
       await initBBIStopFinder();
       fetchLiveETAs();
 
-      // 設定循環更新
       refreshTimer = setInterval(fetchLiveETAs, 15000);
       pageTimer = setInterval(() => {
         if (activeDepartures.length > ITEMS_PER_PAGE) {
@@ -308,7 +304,7 @@
     }
 
     function backToMenu(e) {
-      e.stopPropagation(); // 避免觸發全螢幕
+      e.stopPropagation(); 
       clearInterval(refreshTimer);
       clearInterval(pageTimer);
       activeStopIds.clear();
@@ -318,7 +314,6 @@
       document.getElementById('menu-container').style.display = 'flex';
     }
 
-    // 自動尋址引擎：尋找新香港仔隧道轉車站的真實 Stop ID
     async function initBBIStopFinder() {
       const msgDiv = document.getElementById("loadingMsg");
       msgDiv.style.display = "block";
@@ -336,7 +331,6 @@
             const stops = rsJson.data || [];
 
             for (let s of stops) {
-              // 避免重複查詢已知 Stop ID
               if (activeStopIds.has(s.stop)) break; 
 
               const sRes = await fetch(`${API_BASE}/stop/${s.stop}`);
@@ -344,9 +338,7 @@
               const sJson = await sRes.json();
               const sName = sJson.data?.name_tc || "";
               
-              // 關鍵比對：站名包含「香港仔隧道」或「Aberdeen Tunnel」
               if (sName.includes("香港仔隧道") || sName.includes("Aberdeen Tunnel")) {
-                // 再次驗證方向是否正確 (透過該路線終點站驗證)
                 const routeInfoRes = await fetch(`${API_BASE}/route/CTB/${route}`);
                 const routeInfoJson = await routeInfoRes.json();
                 const routeDest = (dir === "outbound") ? routeInfoJson.data?.dest_tc : routeInfoJson.data?.orig_tc;
@@ -354,7 +346,7 @@
                 const isCorrectBound = keywords.some(kw => routeDest && routeDest.includes(kw));
                 if (isCorrectBound) {
                   activeStopIds.add(s.stop);
-                  break; // 找到該路線正確方向的隧道站即可跳出
+                  break; 
                 }
               }
             }
@@ -390,7 +382,6 @@
                   const diffMins = Math.ceil(diffMs / 60000);
 
                   if (diffMins >= 0) {
-                    // 實時 GPS 判斷邏輯
                     const rmk = (item.rmk_tc || "").trim();
                     const hasGpsIcon = rmk === "" || (!rmk.includes("預定") && !rmk.includes("原定"));
 
@@ -406,7 +397,7 @@
                 if (earliest) results.push(earliest);
               }
             } catch (e) {}
-            await new Promise(r => setTimeout(r, 40)); // API Rate Limit 保護
+            await new Promise(r => setTimeout(r, 40)); 
           }
         }
 
@@ -444,7 +435,6 @@
         const cell = document.createElement("div");
         cell.className = "grid-item";
 
-        // 動態判定抵達狀態
         let etaDisplay = '';
         if (item.mins <= 1) {
           etaDisplay = `
@@ -463,7 +453,6 @@
           `;
         }
 
-        // SVG 圖示替換並處理 Active 狀態
         let gpsSvgCode = GPS_SVG.replace('class="gps-icon"', `class="gps-icon ${item.hasGpsIcon ? 'active' : ''}"`);
 
         cell.innerHTML = `
