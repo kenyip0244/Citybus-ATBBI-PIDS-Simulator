@@ -14,7 +14,7 @@
       --bg-gradient-bottom: #f2f7ff;
       --text-blue: #003399;
       --gps-orange: #f27224;
-      /* 新增：過海線與通宵線的專屬配色 */
+      /* 過海線與通宵線的專屬配色 */
       --xht-red: #d31820;
       --night-black: #000000;
       --night-yellow: #ffcc00;
@@ -234,6 +234,7 @@
       flex: 1;
     }
 
+    /* 修正為 -45 度，向左上方發射 */
     .gps-icon {
       width: 1.6cqw;
       height: 1.6cqw;
@@ -242,7 +243,7 @@
       margin-bottom: 3.5cqw; 
       fill: var(--gps-orange);
       opacity: 0;
-      transform: rotate(-90deg);
+      transform: rotate(-45deg); 
     }
     .gps-icon.active { opacity: 1; }
 
@@ -398,7 +399,7 @@
     const API_BASE = "https://rt.data.gov.hk/v1/transport/citybus-nwfb";
     const ITEMS_PER_PAGE = 8;
     
-    // GPS SVG 圖示
+    // GPS SVG 圖示 (預設向上)
     const GPS_SVG = `<svg class="gps-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14h2v2h-2v-2zm1-12C9.24 4 7 6.24 7 9h2c0-1.66 1.34-3 3-3s3 1.34 3 3c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.76-2.24-5-5-5z" opacity="0"/><path d="M4.01 10.32C5.55 7.15 8.5 5 12 5c3.5 0 6.45 2.15 8.01 5.32l1.79-1C19.83 5.4 16.21 3 12 3 7.79 3 4.17 5.4 2.22 9.32l1.79 1z"/><path d="M8.2 13.06C9.1 11.23 10.45 10 12 10c1.55 0 2.9.89 3.8 2.06l1.6-1.2C16.14 9.24 14.19 8 12 8c-2.19 0-4.14 1.24-5.4 2.86l1.6 1.2z"/></svg>`;
 
     const PLATFORM_ROUTES = {
