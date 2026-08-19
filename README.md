@@ -7,6 +7,13 @@ An authentic Aberdeen Tunnel Bus-Bus Interchange (BBI) Passenger Information Dis
 
 ---
 
+## 🔗 線上體驗 / Live Demo
+
+立即在瀏覽器體驗模擬器：  
+👉 **[https://kenyip0244.github.io/Citybus-ATBBI-PIDS-Simulator/](https://kenyip0244.github.io/Citybus-ATBBI-PIDS-Simulator/)**
+
+---
+
 ## 🌟 核心功能 / Features
 
 * **真實還原介面 (Authentic Visual Design)**:
@@ -42,7 +49,9 @@ An authentic Aberdeen Tunnel Bus-Bus Interchange (BBI) Passenger Information Dis
 ### 本地運行 / Local Setup
 1. 複製此儲存庫 (Clone this repository):
    ```bash
-   git clone [https://github.com/]https://kenyip0244.github.io/Citybus-ATBBI-PIDS-Simulator/.git   ```
+   git clone [https://github.com/kenyip0244/Citybus-ATBBI-PIDS-Simulator.git](https://github.com/kenyip0244/Citybus-ATBBI-PIDS-Simulator.git)
+
+   ```
 
 2. 直接在瀏覽器中開啟 `index.html` 即可運行。
 *(Simply open `index.html` in any modern web browser.)*
@@ -52,7 +61,7 @@ An authentic Aberdeen Tunnel Bus-Bus Interchange (BBI) Passenger Information Dis
 1. 將專案推送至 GitHub 儲存庫。
 2. 進入儲存庫的 **Settings** -> **Pages**。
 3. 在 **Branch** 選擇 `main`（或 `master`）並點擊 **Save**。
-4. 幾分鐘後即可透過 `https://kenyip0244.github.io/Citybus-ATBBI-PIDS-Simulator/` 線上存取。
+4. 部署完成後即可透過 `https://kenyip0244.github.io/Citybus-ATBBI-PIDS-Simulator/` 存取。
 
 ---
 
